@@ -4,6 +4,7 @@ import (
 	"gorm.io/driver/mysql"
 	_ "gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"os"
 )
 
 var (
@@ -11,7 +12,10 @@ var (
 )
 
 func Connect() {
-	d, err := gorm.Open(mysql.Open("root:koero@/simplerest?charset=latin1&parseTime=True"))
+	if len(os.Getenv("BD_STRING")) == 0 {
+		panic("BD_STRING its not defined.")
+	}
+	d, err := gorm.Open(mysql.Open(os.Getenv("BD_STRING")))
 	if err != nil {
 		panic(err)
 	}

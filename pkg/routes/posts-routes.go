@@ -5,6 +5,6 @@ import (
 	"go-scristi/pkg/controllers"
 )
 
-var registerPostRoutes = func(router *mux.Router) {
+var RegisterPostRoutes = func(router *mux.Router) {
 	router.HandleFunc("/posts", controllers.GetPosts).Methods("GET")
 }
