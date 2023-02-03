@@ -22,15 +22,14 @@ jobs:
     - name: Build
       run: go build -v -o goscristi ./cmd/main/
 
-    - name: Test
-      run: go test -v ./...
-
-    - name: Install SSH Key
-      uses: shimataro/ssh-key-action@v2
-      with: 
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        known_hosts: unnecessary
-    - name: Adding Known Hosts
-      run: ssh-keyscan -H ${{ secrets.SSH_HOST }}  >> ~/.ssh/known_hosts
-    - name: Deploy with rsync
-      run: rsync -O -avz --include='goscristi' --include='static/' ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_ADD_DIRECTORY }}
+    - name: Deploy to Production via rsync 
+      uses: easingthemes/ssh-deploy@v2
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-rltzv --delete"
+          # SOURCE is excluded here, defaults to root of repository. For post-build deploys, see example below:
+          # SOURCE: "public/"
+        REMOTE_HOST: ${{ secrets.SSH_HOST }} # format host.domain.com or IP
+        REMOTE_USER: ${{ secrets.SSH_USER }} # SSH user on receiving end
+        TARGET: ${{ secrets.SSH_ADD_DIRECTORY }}    # Base target directory, ex: /home/user/public_html
+        EXCLUDE: "cmd, pkg, .idea, .gitignore, .github, go.*"           # Exclude specific files and directories
