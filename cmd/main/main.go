@@ -9,8 +9,10 @@ import (
 	"net/http"
 )
 
+var port = flag.String("port", "80", "Port to serve on")
+
 func main() {
-	var port = flag.String("port", "80", "Port to serve on")
+	flag.Parse()
 	r := mux.NewRouter()
 	routes.RegisterPostRoutes(r)
 	routes.RegisterPagesRoutes(r)
