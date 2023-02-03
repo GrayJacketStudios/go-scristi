@@ -7,7 +7,6 @@ import (
 	"go-scristi/pkg/routes"
 	"log"
 	"net/http"
-	"os"
 )
 
 var port = flag.String("port", "80", "Port to serve on")
@@ -20,5 +19,5 @@ func main() {
 	routes.RegisterStaticRoute(r)
 
 	fmt.Println("Starting server at port " + *port)
-	log.Fatal(http.ListenAndServeTLS(":"+*port, os.Getenv("CERT_CRT"), os.Getenv("CERT_KEY"), r))
+	log.Fatal(http.ListenAndServe(":"+*port, r))
 }
