@@ -32,4 +32,4 @@ jobs:
         REMOTE_HOST: ${{ secrets.SSH_HOST }} # format host.domain.com or IP
         REMOTE_USER: ${{ secrets.SSH_USER }} # SSH user on receiving end
         TARGET: ${{ secrets.SSH_ADD_DIRECTORY }}    # Base target directory, ex: /home/user/public_html
-        EXCLUDE: "cmd, pkg, .idea, .gitignore, .github, go.*"           # Exclude specific files and directories
+        EXCLUDE: "cmd, pkg, .idea, .gitignore, .github, go.*, .git"           # Exclude specific files and directories
