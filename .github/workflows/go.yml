@@ -1,0 +1,35 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Go
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+
+    - name: Build
+      run: go build -v -o goscristi ./cmd/main/
+
+    - name: Deploy to Production via rsync 
+      uses: easingthemes/ssh-deploy@v2
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-rltzv --delete"
+          # SOURCE is excluded here, defaults to root of repository. For post-build deploys, see example below:
+          # SOURCE: "public/"
+        REMOTE_HOST: ${{ secrets.SSH_HOST }} # format host.domain.com or IP
+        REMOTE_USER: ${{ secrets.SSH_USER }} # SSH user on receiving end
+        TARGET: ${{ secrets.SSH_ADD_DIRECTORY }}    # Base target directory, ex: /home/user/public_html
+        EXCLUDE: "cmd, pkg, .idea, .gitignore, .github, go.*, .git"           # Exclude specific files and directories
