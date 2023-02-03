@@ -8,7 +8,6 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -33,3 +32,11 @@ jobs:
         REMOTE_USER: ${{ secrets.SSH_USER }} # SSH user on receiving end
         TARGET: ${{ secrets.SSH_ADD_DIRECTORY }}    # Base target directory, ex: /home/user/public_html
         EXCLUDE: "cmd, pkg, .idea, .gitignore, .github, go.*, .git"           # Exclude specific files and directories
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@master
+      with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: systemctl restart goscristi.service
